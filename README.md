@@ -9,7 +9,7 @@ The Dockerfile uses the official WordPress image that adds:
 - PHP CodeSniffer with WordPress Coding Standards
 - grunt and grunt-cli
 - Composer
-- PHPUnit with WordPress Unti Tests
+- PHPUnit with WordPress Unit Tests
 
 To use, simply run:
 
@@ -17,11 +17,20 @@ To use, simply run:
 docker run --name <containername> hardeepasrani/pirate-brewery
 ```
 
-Setting up the image is same as official WordPress image with only on additional variable. You need to provide *WORDPRESS_DB_ROOT_PASSWORD* environment variable which will be same as *MYSQL_ROOT_PASSWORD*.
+To push your WordPress live on [ngrok](https://ngrok.com/), simply run:
+
+```
+docker exec -it <container:id> publish
+```
+
+Setting up the image is same as official WordPress image with two additional variable.
+
+- You need to provide **WORDPRESS_DB_ROOT_PASSWORD** environment variable which will be same as **MYSQL_ROOT_PASSWORD** to configure PHP Unit testing enviornment for WordPress.
+- If you want to use your own ngrok auth key, you can provide it as **NGROK_AUTH_KEY** environment variable.
 
 For all other configuration items, please see the official Docker WordPress [ReadMe](https://github.com/docker-library/docs/tree/master/wordpress).
 
-If you want to use it with docker-compose, you can use this *docker-compose.yml* as sample:
+If you want to use it with docker-compose, you can use this **docker-compose.yml** as sample:
 
 ```
 version: '3.3'

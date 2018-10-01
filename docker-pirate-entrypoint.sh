@@ -1,11 +1,15 @@
 #!/bin/bash
 
-if [ ! -z "${WORDPRESS_DB_ROOT_PASSWORD}" ]; then
+if [ -z "${WORDPRESS_DB_ROOT_PASSWORD}" ]; then
 	echo "You need to pass MySQL's root password as WORDPRESS_DB_ROOT_PASSWORD env variable."
 fi
 
 if [ -z "${WORDPRESS_DB_HOST}" ]; then
 	: "${WORDPRESS_DB_HOST:=mysql}"
+fi
+
+if [ ! -z "${NGROK_AUTH_KEY}" ]; then
+	ngrok authtoken ${NGROK_AUTH_KEY}
 fi
 
 if [ -f /tmp/wordpress-tests-lib/wp-tests-config-sample.php ] && [ ! -z "${WORDPRESS_DB_ROOT_PASSWORD}" ]; then

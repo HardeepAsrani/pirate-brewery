@@ -8,16 +8,19 @@ FROM wordpress:latest
 # Copy wp-su.sh
 COPY wp-su.sh /bin/wp
 
+# Copy publish.sh
+COPY publish.sh /bin/publish
+
 # Copy entrypoint
 COPY docker-pirate-entrypoint.sh /usr/local/bin/
 
 # Setup ThemeIsle Development Environment
 RUN apt-get update \
 	# Install required packages
-	&& apt-get install -y --no-install-recommends sudo less wget mysql-client gnupg gnupg2 gnupg1 git subversion \
+	&& apt-get install -y --no-install-recommends sudo less wget mysql-client gnupg gnupg2 gnupg1 git subversion nano unzip \
 	# Install WP-CLI
 	&& curl -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-	&& chmod +x /bin/wp-cli.phar /bin/wp \
+	&& chmod +x /bin/wp-cli.phar /bin/wp /bin/publish \
 	# Install NodeJS and npm
 	&& curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 	&& apt-get install -y nodejs \
@@ -32,7 +35,6 @@ RUN apt-get update \
 	&& npm install -g grunt grunt-cli \
 	# Install Composer
 	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-	&& php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
 	&& php composer-setup.php \
 	&& php -r "unlink('composer-setup.php');" \
 	&& mv /var/www/html/composer.phar /bin/composer \
@@ -46,6 +48,11 @@ RUN apt-get update \
 	&& svn checkout https://develop.svn.wordpress.org/trunk/tests/phpunit/data/ /tmp/wordpress-tests-lib/data/ \
 	&& curl -O https://develop.svn.wordpress.org/trunk/wp-tests-config-sample.php  \
 	&& mv wp-tests-config-sample.php /tmp/wordpress-tests-lib/wp-tests-config-sample.php \
+	# Configure ngrok
+	&& curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip \
+	&& unzip ngrok-stable-linux-amd64.zip \
+	&& mv ngrok /bin/ngrok \
+	&& rm ngrok-stable-linux-amd64.zip \
 	# Remove unuseable packages
 	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
 	&& apt-get clean \
