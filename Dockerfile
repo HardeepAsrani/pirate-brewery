@@ -18,6 +18,8 @@ COPY docker-pirate-entrypoint.sh /usr/local/bin/
 RUN apt-get update \
 	# Install required packages
 	&& apt-get install -y --no-install-recommends sudo less wget mysql-client gnupg gnupg2 gnupg1 git subversion nano unzip \
+	#Install Xdebug
+	&&  pecl install xdebug && docker-php-ext-enable xdebug \
 	# Install WP-CLI
 	&& curl -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 	&& chmod +x /bin/wp-cli.phar /bin/wp /bin/publish \
