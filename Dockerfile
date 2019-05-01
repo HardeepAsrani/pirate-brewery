@@ -14,16 +14,23 @@ COPY publish.sh /bin/publish
 # Copy entrypoint
 COPY docker-pirate-entrypoint.sh /usr/local/bin/
 
+# Copy Vim Config
+COPY vim_config.txt /vim_config.txt
+
 # Setup ThemeIsle Development Environment
 RUN apt-get update \
 	# Install required packages
-	&& apt-get install -y --no-install-recommends sudo less wget mysql-client gnupg gnupg2 gnupg1 git subversion nano unzip \
-	#Install Xdebug
-	&&  pecl install xdebug && docker-php-ext-enable xdebug \
+	&& apt-get install -y --no-install-recommends sudo less wget mysql-client gnupg gnupg2 gnupg1 git subversion nano unzip vim \
+	# Configure Vim
+	&& git clone https://github.com/amix/vimrc.git ~/.vim_runtime \
+	&& sh ~/.vim_runtime/install_awesome_vimrc.sh \
+	&& mv /vim_config.txt ~/.vim_runtime/my_configs.vim \
+	# Install Xdebug
+	&& pecl install xdebug && docker-php-ext-enable xdebug \
 	# Install WP-CLI
 	&& curl -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 	&& chmod +x /bin/wp-cli.phar /bin/wp /bin/publish \
-	# Install NodeJS and npm
+	# Install Node and npm
 	&& curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 	&& apt-get install -y nodejs \
 	# Install PHP CodeSniffer
