@@ -20,7 +20,7 @@ COPY vim_config.txt /vim_config.txt
 # Setup ThemeIsle Development Environment
 RUN apt-get update \
 	# Install required packages
-	&& apt-get install -y --no-install-recommends sudo less wget mysql-client gnupg gnupg2 gnupg1 git subversion nano unzip vim \
+	&& apt-get install -y --no-install-recommends sudo less wget default-mysql-client gnupg gnupg2 gnupg1 git subversion nano unzip vim \
 	# Configure Vim
 	&& git clone https://github.com/amix/vimrc.git ~/.vim_runtime \
 	&& sh ~/.vim_runtime/install_awesome_vimrc.sh \
