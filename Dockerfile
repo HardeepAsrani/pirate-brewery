@@ -31,7 +31,7 @@ RUN apt-get update \
 	&& curl -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 	&& chmod +x /bin/wp-cli.phar /bin/wp /bin/publish \
 	# Install Node and npm
-	&& curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+	&& curl -sL https://deb.nodesource.com/setup_11.x | bash - \
 	&& apt-get install -y nodejs \
 	# Install PHP CodeSniffer
 	&& pear install PHP_CodeSniffer \
