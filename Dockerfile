@@ -53,8 +53,8 @@ RUN apt-get update \
 	&& mv phpunit-6.5.phar /bin/phpunit \
 	# Checkout WordPress' PHP Unit Files
 	&& mkdir /tmp/wordpress-tests-lib/ \
-	&& svn checkout https://develop.svn.wordpress.org/trunk/tests/phpunit/includes/ /tmp/wordpress-tests-lib/includes/ \
-	&& svn checkout https://develop.svn.wordpress.org/trunk/tests/phpunit/data/ /tmp/wordpress-tests-lib/data/ \
+	&& svn checkout --ignore-externals https://develop.svn.wordpress.org/trunk/tests/phpunit/includes/ /tmp/wordpress-tests-lib/includes/ \
+	&& svn checkout --ignore-externals https://develop.svn.wordpress.org/trunk/tests/phpunit/data/ /tmp/wordpress-tests-lib/data/ \
 	&& curl -O https://develop.svn.wordpress.org/trunk/wp-tests-config-sample.php  \
 	&& mv wp-tests-config-sample.php /tmp/wordpress-tests-lib/wp-tests-config-sample.php \
 	# Configure ngrok
