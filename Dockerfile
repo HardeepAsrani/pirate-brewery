@@ -22,35 +22,27 @@ RUN apt-get update \
 	# Install required packages
 	&& apt-get install -y --no-install-recommends sudo less wget default-mysql-client gnupg gnupg2 gnupg1 git subversion nano unzip vim \
 	# Configure Vim
-	&& git clone https://github.com/amix/vimrc.git ~/.vim_runtime \
+	&& git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime \
 	&& sh ~/.vim_runtime/install_awesome_vimrc.sh \
 	&& mv /vim_config.txt ~/.vim_runtime/my_configs.vim \
+	&& git clone --depth=1 https://github.com/tomasiser/vim-code-dark.git ~/.vim \
 	# Install Xdebug
 	&& pecl install xdebug && docker-php-ext-enable xdebug \
 	# Install WP-CLI
 	&& curl -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 	&& chmod +x /bin/wp-cli.phar /bin/wp /bin/publish \
 	# Install Node and npm
-	&& curl -sL https://deb.nodesource.com/setup_11.x | bash - \
+	&& curl -sL https://deb.nodesource.com/setup_14.x | bash - \
 	&& apt-get install -y nodejs \
-	# Install PHP CodeSniffer
-	&& pear install PHP_CodeSniffer \
-	# Install WordPress Codeing Standards
-	&& git clone https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git wpcs \
-	&& mv wpcs /bin/wpcs \
-	&& phpcs --config-set installed_paths /bin/wpcs/ \
-	&& pear upgrade PHP_CodeSniffer \
-	# Install Grunt and GruntCLI
-	&& npm install -g grunt grunt-cli \
 	# Install Composer
 	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 	&& php composer-setup.php \
 	&& php -r "unlink('composer-setup.php');" \
 	&& mv /var/www/html/composer.phar /bin/composer \
-	# Install PHPUnit
-	&& wget https://phar.phpunit.de/phpunit-6.5.phar \
-	&& chmod +x phpunit-6.5.phar \
-	&& mv phpunit-6.5.phar /bin/phpunit \
+	# Install PHP CodeSniffer, WordPress CS & PHP Unit
+	&& composer g require --dev squizlabs/php_codesniffer wp-coding-standards/wpcs phpcompatibility/php-compatibility automattic/vipwpcs dealerdirect/phpcodesniffer-composer-installer phpunit/phpunit=6.5 -W \
+	# Install Yarn, Grunt and GruntCLI
+	&& npm install -g yarn grunt grunt-cli \
 	# Checkout WordPress' PHP Unit Files
 	&& mkdir /tmp/wordpress-tests-lib/ \
 	&& svn checkout --ignore-externals https://develop.svn.wordpress.org/trunk/tests/phpunit/includes/ /tmp/wordpress-tests-lib/includes/ \
